@@ -21,7 +21,9 @@ def make_spectrogram():
     os.close(temp_file)
 
     # load in our ML model
-    saver = tf.train.Saver()
+    with tf.Graph().as_default() as g:
+        init_op = tf.initialize_all_variables()
+        saver = tf.train.Saver()
 
     try:
         # TODO: eventually, we want this to continuously run
@@ -35,10 +37,11 @@ def make_spectrogram():
 
         # feed our data into our ML model
         with tf.Session() as sess:
-            saver.restore(sess, tf_model_path + '/model.ckpt')
             input_tensor = sess.graph.get_collection("input_batch_raw")[0]
             num_frames_tensor = sess.graph.get_collection("num_frames")[0]
             predictions_tensor = sess.graph.get_collection("predictions")[0]
+            saver.restore(sess, tf_model_path + '/model.ckpt')
+
 
             predictions, = sess.run(
                 [predictions_tensor],
