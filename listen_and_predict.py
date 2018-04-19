@@ -10,6 +10,8 @@ import aiy.audio  # noqa
 from utils import vggish
 
 RECORD_DURATION_SECONDS = 3
+AIY_PROJECTS_DIR = os.path.dirname(os.path.dirname(__file__))
+
 
 tf_model_path = 'safesense/tensorflow/yt8m'
 
@@ -58,7 +60,7 @@ def make_spectrogram():
 
 def enable_audio_driver():
     print("Enabling audio driver for VoiceKit.")
-    configure_driver = os.path.join('./', 'scripts', 'configure-driver.sh')
+    configure_driver = os.path.join(AIY_PROJECTS_DIR, 'scripts', 'configure-driver.sh')
     subprocess.check_call(['sudo', configure_driver])
 
 
