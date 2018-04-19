@@ -21,8 +21,7 @@ def make_spectrogram():
     os.close(temp_file)
 
     # load in our ML model
-    with tf.Graph().as_default() as g:
-        init_op = tf.initialize_all_variables()
+    with tf.Graph().as_default():
         saver = tf.train.Saver()
 
     try:
@@ -33,7 +32,7 @@ def make_spectrogram():
 
         # convert to our model input with VGGish
         samples = data / 32768.0  # Convert to [-1.0, +1.0]
-        examples_batch = vggish.vggish_input.waveform_to_examples(samples, sample_rate)
+        examples_batch = vggish.vggish_input.waveform_to_examples(samples, sr)
 
         # feed our data into our ML model
         with tf.Session() as sess:
@@ -47,7 +46,7 @@ def make_spectrogram():
                 [predictions_tensor],
                 feed_dict={
                     input_tensor: data,
-                    num_frames_tensor: num_frames
+                    num_frames_tensor: num_frames_tensor
                 })
 
         # TODO: take ML model output and write to kinesis
