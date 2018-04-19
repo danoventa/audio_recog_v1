@@ -7,7 +7,7 @@ import tensorflow as tf
 import traceback
 
 import aiy.audio  # noqa
-from .utils import vggish
+from utils import vggish
 
 RECORD_DURATION_SECONDS = 3
 
