@@ -58,7 +58,7 @@ def make_spectrogram():
 
 def enable_audio_driver():
     print("Enabling audio driver for VoiceKit.")
-    configure_driver = os.path.join('', 'scripts', 'configure-driver.sh')
+    configure_driver = os.path.join('/', 'scripts', 'configure-driver.sh')
     subprocess.check_call(['sudo', configure_driver])
 
 
