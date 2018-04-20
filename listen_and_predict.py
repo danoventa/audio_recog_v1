@@ -24,9 +24,9 @@ def make_spectrogram():
     # load in our ML model
 
     with tf.Session() as sess:
-        sess.graph.add_to_collection("input_batch_raw")[0]
-        sess.graph.add_to_collection("num_frames")[0]
-        sess.graph.add_to_collection("predictions")[0]
+        sess.graph.add_to_collection("input_batch_raw", 0)
+        sess.graph.add_to_collection("num_frames", 0)
+        sess.graph.add_to_collection("predictions", 0)
         saver = tf.train.Saver()
 
     try:
