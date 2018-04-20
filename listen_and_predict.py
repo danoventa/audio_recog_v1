@@ -22,9 +22,12 @@ def make_spectrogram():
     os.close(temp_file)
 
     # load in our ML model
-    dummy = tf.Variable(0)
-    init_op = tf.initialize_all_variables
-    saver = tf.train.Saver()
+
+    with tf.Session() as sess:
+        sess.graph.add_to_collection("input_batch_raw")[0]
+        sess.graph.add_to_collection("num_frames")[0]
+        sess.graph.add_to_collection("predictions")[0]
+        saver = tf.train.Saver()
 
     try:
         # TODO: eventually, we want this to continuously run
