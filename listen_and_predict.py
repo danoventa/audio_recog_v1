@@ -28,18 +28,27 @@ def make_spectrogram():
     # load in our ML model
     with tf.Graph().as_default():
         sess = tf.Session()
+        print(sess)
         checkpoint_path = tf_model_path + '/youtube_model.ckpt'
         meta_graph_location = checkpoint_path + '.meta'
+
+        print(meta_graph_location)
 
         saver = tf.train.import_meta_graph(
             meta_graph_location, clear_devices=True, import_scope='m2'
         )
+        print(saver)
 
         saver.restore(sess, checkpoint_path)
 
-        
+        sess.run(
+            set_up_init_ops(tf.get_collection_ref(tf.GraphKeys.LOCAL_VARIABLES))
+        )
+        print(sess)
         g_sess = sess
+        print(g_sess)
 
+    print(g_sess)
     try:
         # TODO: eventually, we want this to continuously run
         input("Press enter to record " + str(RECORD_DURATION_SECONDS) + "seconds of audio, and convert to spectrogram")
