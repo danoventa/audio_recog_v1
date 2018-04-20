@@ -7,7 +7,8 @@ import tensorflow as tf
 import traceback
 
 import aiy.audio  # noqa
-from utils import vggish
+import vggish_input as vin
+
 
 RECORD_DURATION_SECONDS = 3
 AIY_PROJECTS_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -33,7 +34,7 @@ def make_spectrogram():
 
         # convert to our model input with VGGish
         samples = data / 32768.0  # Convert to [-1.0, +1.0]
-        examples_batch = vggish.vggish_input.waveform_to_examples(samples, sr)
+        examples_batch = vin.waveform_to_examples(samples, sr)
 
         # feed our data into our ML model
         with tf.Session() as sess:
