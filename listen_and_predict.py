@@ -33,7 +33,7 @@ def make_spectrogram():
         examples_batch = vin.waveform_to_examples(samples, sr)
 
         with tf.Graph().as_default():
-            sess = tf.Session()
+            sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True, log_device_placement=True))
             checkpoint_path = tf_model_path + '/youtube_model.ckpt'
             meta_graph_location = checkpoint_path + '.meta'
 
