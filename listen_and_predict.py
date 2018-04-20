@@ -16,18 +16,31 @@ AIY_PROJECTS_DIR = os.path.dirname(os.path.dirname(__file__))
 
 tf_model_path = 'safesense/tensorflow/yt8m'
 
+g_sess = tf.Session()
+
 def make_spectrogram():
     """record a few secs of audio with the mic, convert to spectrogram"""
     temp_file, temp_path = tempfile.mkstemp(suffix='.wav')
     os.close(temp_file)
 
-    # load in our ML model
 
-    with tf.Session() as sess:
-        sess.graph.add_to_collection("input_batch_raw", 0)
-        sess.graph.add_to_collection("num_frames", 0)
-        sess.graph.add_to_collection("predictions", 0)
-        saver = tf.train.Saver()
+
+    # load in our ML model
+    with tf.Graph.as_default():
+        sess = tf.Session()
+        checkpoint_path = tf_model_path + '/youtube_model.ckpt'
+        meta_graph_location = checkpoint_path + '.meta'
+
+        saver = tf.train.import_meta_graph(
+            meta_graph_location, clear_devices=True, import_scope='m2'
+        )
+
+        saver.restore(sess, checkpoint_path)
+
+        sess.run(
+            set_up_init_ops(tf.get_collection_ref(tf.GraphKeys.LOCAL_VARIABLES))
+        )
+        g_sess = sess
 
     try:
         # TODO: eventually, we want this to continuously run
@@ -40,19 +53,16 @@ def make_spectrogram():
         examples_batch = vin.waveform_to_examples(samples, sr)
 
         # feed our data into our ML model
-        with tf.Session() as sess:
-            input_tensor = sess.graph.get_collection("input_batch_raw")[0]
-            num_frames_tensor = sess.graph.get_collection("num_frames")[0]
-            predictions_tensor = sess.graph.get_collection("predictions")[0]
-            saver.restore(sess, tf_model_path + '/model.ckpt')
+        input_tensor = g_sess.graph.get_collection("input_batch_raw")[0]
+        num_frames_tensor = g_sess.graph.get_collection("num_frames")[0]
+        predictions_tensor = g_sess.graph.get_collection("predictions")[0]
 
-
-            predictions, = sess.run(
-                [predictions_tensor],
-                feed_dict={
-                    input_tensor: data,
-                    num_frames_tensor: num_frames_tensor
-                })
+        predictions, = g_sess.run(
+            [predictions_tensor],
+            feed_dict={
+                input_tensor: data,
+                num_frames_tensor: num_frames_tensor
+            })
 
         # TODO: take ML model output and write to kinesis
         print(predictions) # for now, just print them
@@ -62,6 +72,16 @@ def make_spectrogram():
             os.unlink(temp_path)
         except FileNotFoundError:
             pass
+
+# Workaround for num_epochs issue.
+def set_up_init_ops(variables):
+    init_op_list = []
+    for variable in list(variables):
+        if "train_input" in variable.name:
+            init_op_list.append(tf.assign(variable, 1))
+            variables.remove(variable)
+    init_op_list.append(tf.variables_initializer(variables))
+    return init_op_list
 
 
 def enable_audio_driver():
