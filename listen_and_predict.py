@@ -38,9 +38,8 @@ def make_spectrogram():
             meta_graph_location = checkpoint_path + '.meta'
 
             saver = tf.train.import_meta_graph(
-                meta_graph_location
+                meta_graph_location, allow_soft_placement=True
             )
-            print('Saver init')
 
             saver.restore(sess, checkpoint_path)
 
