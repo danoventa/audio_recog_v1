@@ -43,9 +43,9 @@ def make_spectrogram():
 
         print('saver restpre')
 
-        sess.run(
-            set_up_init_ops(tf.get_collection_ref(tf.GraphKeys.LOCAL_VARIABLES))
-        )
+        # sess.run(
+        #     set_up_init_ops(tf.get_collection_ref(tf.GraphKeys.LOCAL_VARIABLES))
+        # )
         print(sess)
         g_sess = sess
         print(g_sess)
