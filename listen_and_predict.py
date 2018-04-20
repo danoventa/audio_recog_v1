@@ -38,7 +38,7 @@ def make_spectrogram():
             meta_graph_location = checkpoint_path + '.meta'
 
             saver = tf.train.import_meta_graph(
-                meta_graph_location, allow_soft_placement=True
+                meta_graph_location
             )
 
             saver.restore(sess, checkpoint_path)
@@ -58,7 +58,7 @@ def make_spectrogram():
                 feed_dict={
                     input_tensor: data,
                     num_frames_tensor: num_frames_tensor
-                })
+                }, allow_soft_placement=True)
 
         # TODO: take ML model output and write to kinesis
         print(predictions) # for now, just print them
