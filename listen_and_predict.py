@@ -27,7 +27,7 @@ def make_spectrogram():
 
     try:
         # TODO: eventually, we want this to continuously run
-        input("Press enter to record " + RECORD_DURATION_SECONDS + "seconds of audio, and convert to spectrogram")
+        input("Press enter to record " + str(RECORD_DURATION_SECONDS) + "seconds of audio, and convert to spectrogram")
         aiy.audio.record_to_wave(temp_path, RECORD_DURATION_SECONDS)
         sr, data = wavfile.read(temp_path)
 
