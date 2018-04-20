@@ -14,8 +14,7 @@ RECORD_DURATION_SECONDS = 3
 AIY_PROJECTS_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
-# tf_model_path = './safesense/tensorflow/yt8m'
-tf_model_path = 'safesense/tensorflow/'
+tf_model_path = './safesense/tensorflow/yt8m'
 
 def make_spectrogram():
     """record a few secs of audio with the mic, convert to spectrogram"""
@@ -39,7 +38,7 @@ def make_spectrogram():
             meta_graph_location = checkpoint_path + '.meta'
 
             saver = tf.train.import_meta_graph(
-                meta_graph_location, clear_devices=True, import_scope='m2'
+                meta_graph_location
             )
             print('Saver init')
 
