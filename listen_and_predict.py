@@ -14,7 +14,8 @@ RECORD_DURATION_SECONDS = 3
 AIY_PROJECTS_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
-tf_model_path = './safesense/tensorflow/yt8m'
+# tf_model_path = './safesense/tensorflow/yt8m'
+tf_model_path = 'safesense/tensorflow/'
 
 def make_spectrogram():
     """record a few secs of audio with the mic, convert to spectrogram"""
