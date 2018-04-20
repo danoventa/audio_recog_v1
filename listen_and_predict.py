@@ -26,7 +26,7 @@ def make_spectrogram():
 
 
     # load in our ML model
-    with tf.Graph.as_default():
+    with tf.Graph().as_default():
         sess = tf.Session()
         checkpoint_path = tf_model_path + '/youtube_model.ckpt'
         meta_graph_location = checkpoint_path + '.meta'
