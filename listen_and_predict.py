@@ -43,8 +43,6 @@ def make_spectrogram():
 
             saver.restore(sess, checkpoint_path)
 
-            print('saver restpre')
-
             sess.run(
                 set_up_init_ops(tf.get_collection_ref(tf.GraphKeys.LOCAL_VARIABLES))
             )
@@ -53,13 +51,17 @@ def make_spectrogram():
             num_frames_tensor = sess.graph.get_collection("num_frames")[0]
             predictions_tensor = sess.graph.get_collection("predictions")[0]
 
+            print('before device')
+
             with tf.device('/cpu:0'):
-                predictions, = sess.run(
+                predictions = sess.run(
                     [predictions_tensor],
                     feed_dict={
                         input_tensor: data,
                         num_frames_tensor: num_frames_tensor
                     })
+
+            print('with device')
 
         # TODO: take ML model output and write to kinesis
         print(predictions) # for now, just print them
