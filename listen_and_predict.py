@@ -37,9 +37,7 @@ def make_spectrogram():
 
         saver.restore(sess, checkpoint_path)
 
-        sess.run(
-            set_up_init_ops(tf.get_collection_ref(tf.GraphKeys.LOCAL_VARIABLES))
-        )
+        
         g_sess = sess
 
     try:
