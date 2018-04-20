@@ -37,9 +37,11 @@ def make_spectrogram():
         saver = tf.train.import_meta_graph(
             meta_graph_location, clear_devices=True, import_scope='m2'
         )
-        print(saver)
+        print('Saver init')
 
         saver.restore(sess, checkpoint_path)
+
+        print('saver restpre')
 
         sess.run(
             set_up_init_ops(tf.get_collection_ref(tf.GraphKeys.LOCAL_VARIABLES))
