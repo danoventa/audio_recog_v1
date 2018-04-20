@@ -43,9 +43,9 @@ def make_spectrogram():
 
             saver.restore(sess, checkpoint_path)
 
-            sess.run(
-                set_up_init_ops(tf.get_collection_ref(tf.GraphKeys.LOCAL_VARIABLES))
-            )
+            # sess.run(
+            #     set_up_init_ops(tf.get_collection_ref(tf.GraphKeys.LOCAL_VARIABLES))
+            # )
             # feed our data into our ML model
             input_tensor = sess.graph.get_collection("input_batch_raw")[0]
             num_frames_tensor = sess.graph.get_collection("num_frames")[0]
