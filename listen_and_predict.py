@@ -24,7 +24,7 @@ def make_spectrogram():
     # load in our ML model
     try:
         # TODO: eventually, we want this to continuously run
-        input("Press enter to record " + str(RECORD_DURATION_SECONDS) + "seconds of audio, and convert to spectrogram")
+        input("Press enter to record " + str(RECORD_DURATION_SECONDS) + " seconds of audio, and convert to spectrogram")
         aiy.audio.record_to_wave(temp_path, RECORD_DURATION_SECONDS)
         sr, data = wavfile.read(temp_path)
 
@@ -53,12 +53,13 @@ def make_spectrogram():
             num_frames_tensor = sess.graph.get_collection("num_frames")[0]
             predictions_tensor = sess.graph.get_collection("predictions")[0]
 
-            predictions, = sess.run(
-                [predictions_tensor],
-                feed_dict={
-                    input_tensor: data,
-                    num_frames_tensor: num_frames_tensor
-                }, allow_soft_placement=True)
+            with tf.device('/cpu:0'):
+                predictions, = sess.run(
+                    [predictions_tensor],
+                    feed_dict={
+                        input_tensor: data,
+                        num_frames_tensor: num_frames_tensor
+                    })
 
         # TODO: take ML model output and write to kinesis
         print(predictions) # for now, just print them
