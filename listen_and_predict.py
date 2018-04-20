@@ -16,8 +16,6 @@ AIY_PROJECTS_DIR = os.path.dirname(os.path.dirname(__file__))
 
 tf_model_path = 'safesense/tensorflow/yt8m'
 
-g_sess = tf.Session()
-
 def make_spectrogram():
     """record a few secs of audio with the mic, convert to spectrogram"""
     temp_file, temp_path = tempfile.mkstemp(suffix='.wav')
@@ -26,31 +24,6 @@ def make_spectrogram():
 
 
     # load in our ML model
-    with tf.Graph().as_default():
-        sess = tf.Session()
-        print(sess)
-        checkpoint_path = tf_model_path + '/youtube_model.ckpt'
-        meta_graph_location = checkpoint_path + '.meta'
-
-        print(meta_graph_location)
-
-        saver = tf.train.import_meta_graph(
-            meta_graph_location, clear_devices=True, import_scope='m2'
-        )
-        print('Saver init')
-
-        saver.restore(sess, checkpoint_path)
-
-        print('saver restpre')
-
-        # sess.run(
-        #     set_up_init_ops(tf.get_collection_ref(tf.GraphKeys.LOCAL_VARIABLES))
-        # )
-        print(sess)
-        g_sess = sess
-        print(g_sess)
-
-    print(g_sess)
     try:
         # TODO: eventually, we want this to continuously run
         input("Press enter to record " + str(RECORD_DURATION_SECONDS) + "seconds of audio, and convert to spectrogram")
@@ -61,17 +34,34 @@ def make_spectrogram():
         samples = data / 32768.0  # Convert to [-1.0, +1.0]
         examples_batch = vin.waveform_to_examples(samples, sr)
 
-        # feed our data into our ML model
-        input_tensor = g_sess.graph.get_collection("input_batch_raw")[0]
-        num_frames_tensor = g_sess.graph.get_collection("num_frames")[0]
-        predictions_tensor = g_sess.graph.get_collection("predictions")[0]
+        with tf.Graph().as_default():
+            sess = tf.Session()
+            checkpoint_path = tf_model_path + '/youtube_model.ckpt'
+            meta_graph_location = checkpoint_path + '.meta'
 
-        predictions, = g_sess.run(
-            [predictions_tensor],
-            feed_dict={
-                input_tensor: data,
-                num_frames_tensor: num_frames_tensor
-            })
+            saver = tf.train.import_meta_graph(
+                meta_graph_location, clear_devices=True, import_scope='m2'
+            )
+            print('Saver init')
+
+            saver.restore(sess, checkpoint_path)
+
+            print('saver restpre')
+
+            sess.run(
+                set_up_init_ops(tf.get_collection_ref(tf.GraphKeys.LOCAL_VARIABLES))
+            )
+            # feed our data into our ML model
+            input_tensor = sess.graph.get_collection("input_batch_raw")[0]
+            num_frames_tensor = sess.graph.get_collection("num_frames")[0]
+            predictions_tensor = sess.graph.get_collection("predictions")[0]
+
+            predictions, = sess.run(
+                [predictions_tensor],
+                feed_dict={
+                    input_tensor: data,
+                    num_frames_tensor: num_frames_tensor
+                })
 
         # TODO: take ML model output and write to kinesis
         print(predictions) # for now, just print them
