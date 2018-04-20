@@ -21,8 +21,9 @@ def make_spectrogram():
     os.close(temp_file)
 
     # load in our ML model
-    with tf.Graph().as_default():
-        saver = tf.train.Saver()
+    dummy = tf.Variable(0)
+    init_op = tf.initialdize_all_variables
+    saver = tf.train.Saver()
 
     try:
         # TODO: eventually, we want this to continuously run
