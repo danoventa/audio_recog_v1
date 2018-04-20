@@ -22,7 +22,7 @@ def make_spectrogram():
 
     # load in our ML model
     dummy = tf.Variable(0)
-    init_op = tf.initialdize_all_variables
+    init_op = tf.initialize_all_variables
     saver = tf.train.Saver()
 
     try:
