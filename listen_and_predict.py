@@ -7,9 +7,8 @@ import tensorflow as tf
 import traceback
 import csv
 
-from .utils import vggish, youtube8m
-
-import aiy.audio  # noqa
+from audio_recog_v1.utils import vggish, youtube8m
+import audio_recog_v1.aiy.audio  as audio # noqa
 
 RECORD_DURATION_SECONDS = 3
 AIY_PROJECTS_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -29,8 +28,9 @@ def make_spectrogram():
     try:
         # TODO: eventually, we want this to continuously run
         input("Press enter to record " + str(RECORD_DURATION_SECONDS) + " seconds of audio, and convert to spectrogram")
-        aiy.audio.record_to_wave(temp_path, RECORD_DURATION_SECONDS)
+        audio.record_to_wave(temp_path, RECORD_DURATION_SECONDS)
         sr, data = wavfile.read(temp_path)
+
 
 # init everything
 
