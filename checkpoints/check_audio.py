@@ -16,14 +16,12 @@
 """Check that the voiceHAT audio input and output are both working."""
 
 
-import fileinput
 import os
-import re
-import subprocess
-import sys
+
 import tempfile
 import textwrap
 import traceback
+
 
 import aiy.audio  # noqa
 from aiy._drivers._hat import get_aiy_device_name
