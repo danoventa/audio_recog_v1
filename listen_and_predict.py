@@ -10,8 +10,6 @@ import csv
 from .utils import vggish, youtube8m
 
 import aiy.audio  # noqa
-import vggish_input as vin
-
 
 RECORD_DURATION_SECONDS = 3
 AIY_PROJECTS_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -33,10 +31,6 @@ def make_spectrogram():
         input("Press enter to record " + str(RECORD_DURATION_SECONDS) + " seconds of audio, and convert to spectrogram")
         aiy.audio.record_to_wave(temp_path, RECORD_DURATION_SECONDS)
         sr, data = wavfile.read(temp_path)
-
-        # convert to our model input with VGGish
-        samples = data / 32768.0  # Convert to [-1.0, +1.0]
-        examples_batch = vin.waveform_to_examples(samples, sr)
 
 # init everything
 
@@ -68,7 +62,7 @@ def make_spectrogram():
 
 # get predictions
         samples = data / 32768.0  # Convert to [-1.0, +1.0]
-        examples_batch = vggish.input.waveform_to_examples(samples, SAMPLE_RATE)
+        examples_batch = vggish.input.waveform_to_examples(samples, sr)
 
         # get features
         sess =_vggish_sess
