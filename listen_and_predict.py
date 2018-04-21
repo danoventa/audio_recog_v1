@@ -7,8 +7,8 @@ import tensorflow as tf
 import traceback
 import csv
 
-from audio_recog_v1.utils import vggish, youtube8m
-import audio_recog_v1.aiy.audio  as audio # noqa
+from .utils import vggish, youtube8m
+from .aiy import audio # noqa
 
 RECORD_DURATION_SECONDS = 3
 AIY_PROJECTS_DIR = os.path.dirname(os.path.dirname(__file__))
